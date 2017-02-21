@@ -1,2 +1,8 @@
 # robot_artist
-Robot artist that can draw any image using OpenCV.
+This project is a robot artist that can draw any image using OpenCV.
+
+  The robot processes an image which is either taken with the Raspberry Pi camera or loaded into the working directory. The image is processed by resizing it, converting from RGB to grayscale, and performing Canny edge detection. The thresholds for the edge detection are set using sliding bars while the user can see the effect of the upper and lower thresholds in real-time. This is necessary because it is impossible to adapt the thresholds ahead of time for a given image.
+
+  After edge detection, an algorithm is ran to order the pixels in an array. From top-left to bottom-right of the image, a white (255) pixel is found. That first pixel is added to the pixel array (pix_list). Then the neighboring pixels (3x3 matrix) are looked at to find an adjacent pixel. If an adjacent pixel is found, the neighboring pixels are again searched, and if a pixel is found this process repeats. By doing it this way, the first pixel in an edge is found, then that entire edge will be drawn before moving on to the next edge. Throughout this process, as soon as a pixel is added to the list, that pixel is then deleted so as to not repeat anything. 
+  
+  Finally, all of the pixel coordinates in the binary image are converted into Cartesian coordinates, which are then converted to angles for the servos using inverse kinematics. After every angle is converted, a SQL table is created of every angle in order. This table is then sent, row-by-row in order, to the microcontroller to be converted to a PWM signal, which are then sent to the servos simultaneously.
